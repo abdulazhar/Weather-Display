@@ -1,0 +1,67 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Angular JS</title>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+</head>
+<body ng-app="jsbin">
+  <div ng-controller="DemoCtrl as vm">
+    <input type ="text" id = "id"  ng-model = "cityName"  />
+    <input type="button" value=GetDetails ng-click='add()'
+      
+    >
+    <h1 align="center">{{cityName }}</h1>
+    <p align = "center"> <img src="http://openweathermap.org/img/w/{{imgCode}}.png"> </p>
+     Temperature:<h1 align = "center" class = "cityName"> {{ tmp | number : 1 }}C </h1>
+    Humidity <h1 align = "center"> {{ hmdy | number  }}% </h1>
+    <p align = "center"> <span> Min Temp :  {{minTemp | number : 1 }} C</span><span>   Max Temp :  {{maxTemp | number : 1 }}C 
+      </span></p>
+  </div>
+  <script>
+var app = angular.module('jsbin', []);
+
+app.controller('DemoCtrl', function($scope,$http) {
+  
+  var vm = this;
+  
+ 
+
+  
+    // Initialization of the scope variables. 
+ 
+    $scope.cityName = "Your City";
+    $scope.tmp = 0;
+    $scope.minTemp = 0;
+    $scope.maxTemp = 0;
+ 
+    // Logic for the On-Click event.
+ 
+    $scope.add = function(){
+      //alert($scope.cityName);
+        var url = "http://api.openweathermap.org/data/2.5/weather?q="+$scope.cityName+"&APPID=23b03172768a9d4953833e833b7effd5";
+      
+      
+        $http.get(url)
+        .success(function(response) {
+            $scope.imgWidth = 150;
+            $scope.imgHeight = 150;
+            $scope.wtData = response.coord;
+            $scope.ct = response.name;
+            $scope.tmp = response.main.temp - 272.15;
+            $scope.minTemp = response.main.temp_min - 272.15;
+          
+            $scope.maxTemp = response.main.temp_max - 272.15;
+            $scope.hmdy = response.main.humidity;
+            $scope.imgCode = response.weather[0].icon;
+        });
+     };
+});
+
+
+</script>
+</body>
+</html>
